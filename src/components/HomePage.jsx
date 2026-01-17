@@ -45,7 +45,7 @@ export default function HomePage() {
     }
 
     const updateMyFavourites = (articleURL, articleToAdd) => {
-       
+    
         setMyFavourites(currentFavourites => { 
     
          // Check if already in list
@@ -73,12 +73,14 @@ export default function HomePage() {
     }, [myFavourites]);
 
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col h-screen">
             <Header keyword={keyword} handleSetKeyword={handleSetKeyword} handleError={handleError}/>
-            <div className="flex">
-                <FavouritesPanel />
+            <div className="flex-1">
+                <div className="flex flex-row h-full">
+                <FavouritesPanel myFavourites={myFavourites} clearMyFavourites={clearMyFavourites} handleSetKeyword={handleSetKeyword}/>
                 <ResultsPanel keyword={keyword} page={page}
                 updateMyFavourites={updateMyFavourites} handleNextPage={handleNextPage} myFavourites={myFavourites} handleError={handleError}/>
+                </div>
             </div>
             
             <Alerts isAlertOpen={isAlertOpen} setIsAlertOpen={setIsAlertOpen} errorMessage={errorMessage} setErrorMessage={setErrorMessage}/>
