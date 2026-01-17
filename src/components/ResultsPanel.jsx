@@ -58,6 +58,8 @@ export default function ResultsPanel({keyword, page, updateMyFavourites, handleN
         
     }
     , [page, keyword]);    
+//let URL = `https://newsapi.org/v2/everything?apiKey=${apiKey}&sortBy=publishedAt&q=${keyword}&pageSize=12&page=${page}&searchIn=title&language=en`;
+                let URL = `https://gnews.io/api/v4/search?q=${keyword}&lang=en&max=8&page=${page}&apikey=${GNewsApiKey}`;
 
     return(
         <div className="basis-4/5 grid grid-cols-1 items-center bg-base-200 xs:grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-x-12 p-5 items-start justify-items-center">
