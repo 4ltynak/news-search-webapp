@@ -14,5 +14,9 @@ Please note, the latest version only works with desktop layouts. Mobile layout w
 
 **Placeholder Support:** If no image is available for an article, a placeholder image is shown.
 
+## Demo
+An example of the the application can be viewed at the following link: 
+https://news-search-webapp.vercel.app/
+
 ## Technologies Used: 
 React, Tailwind CSS, DaisyUI
