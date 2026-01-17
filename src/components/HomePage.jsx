@@ -10,25 +10,12 @@ export default function HomePage() {
     const [myFavourites, setMyFavourites] = useState( JSON.parse(localStorage.getItem("favourites")) ?? [] );
     const [page, setPage] = useState(1);
 
-    const [errorMessage, setErrorMessage] = useState("");
+    const [error, setError] = useState({errorType: "", error: ""});
     const [isAlertOpen, setIsAlertOpen] = useState(false);
 
     const clearMyFavourites = () => {
         setMyFavourites([]);
     }
-
-    const handleError = (msg) => {
-        setErrorMessage(msg);
-    }
-
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway'){
-            return;
-        }
-
-        setIsAlertOpen(false);
-    }
-
     
     const handleSetKeyword = (searchTerm) => {
         // input must not be empty
@@ -59,31 +46,31 @@ export default function HomePage() {
             return [...currentFavourites, articleToAdd]});
     }
 
-    // show alert on error
-    useEffect(() => {
-        if (errorMessage.trim().length > 0) {
-            setIsAlertOpen(true);
-        }
-        
-    }, [errorMessage]);
-
     // update localstorage when favourites list changes
     useEffect(() => {
         localStorage.setItem("favourites", JSON.stringify(myFavourites));
     }, [myFavourites]);
 
     return (
-        <div className="flex flex-col h-screen">
-            <Header keyword={keyword} handleSetKeyword={handleSetKeyword} handleError={handleError}/>
-            <div className="flex-1">
+        <div className="h-screen">
+            <div className="flex flex-col h-full">
+                <Header keyword={keyword} handleSetKeyword={handleSetKeyword} setError={setError}/>
+            <div className="flex-1 overflow-y-hidden">
                 <div className="flex flex-row h-full">
                 <FavouritesPanel myFavourites={myFavourites} clearMyFavourites={clearMyFavourites} handleSetKeyword={handleSetKeyword}/>
                 <ResultsPanel keyword={keyword} page={page}
-                updateMyFavourites={updateMyFavourites} handleNextPage={handleNextPage} myFavourites={myFavourites} handleError={handleError}/>
+                updateMyFavourites={updateMyFavourites} handleNextPage={handleNextPage} myFavourites={myFavourites} setError={setError}/>
                 </div>
             </div>
-            
-            <Alerts isAlertOpen={isAlertOpen} setIsAlertOpen={setIsAlertOpen} errorMessage={errorMessage} setErrorMessage={setErrorMessage}/>
+            </div>
+            <div className="absolute z-40">
+                {
+                error.error.length > 0 &&
+                <Alerts isAlertOpen={isAlertOpen} setIsAlertOpen={setIsAlertOpen} error={error} setError={setError}/>
+                }
+            </div>
         </div>
+        
     );
 }
+            

@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import NewsItem from "./NewsItem";
 
-export default function ResultsPanel({keyword, page, updateMyFavourites, handleNextPage, handleError, myFavourites}){
+export default function ResultsPanel({keyword, page, updateMyFavourites, handleNextPage, setError, myFavourites}){
     const GNewsApiKey = import.meta.env.VITE_GNEWS_API_KEY;
 
     const [news, setNews] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
-
+    
     const fetchArticles = async (keyword, page) => {
         
         // initial render only
@@ -35,7 +35,7 @@ export default function ResultsPanel({keyword, page, updateMyFavourites, handleN
                     }
                     
                 } else {
-                    handleError("No more articles to retrieve.");
+                    setError({errorType: "info", errorMessage: "No articles to retrieve."});
                 }
 
             } catch (err) {
@@ -58,134 +58,43 @@ export default function ResultsPanel({keyword, page, updateMyFavourites, handleN
         
     }
     , [page, keyword]);    
-//let URL = `https://newsapi.org/v2/everything?apiKey=${apiKey}&sortBy=publishedAt&q=${keyword}&pageSize=12&page=${page}&searchIn=title&language=en`;
-                let URL = `https://gnews.io/api/v4/search?q=${keyword}&lang=en&max=8&page=${page}&apikey=${GNewsApiKey}`;
 
     return(
-        <div className="basis-4/5 grid grid-cols-1 items-center bg-base-200 xs:grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-x-12 p-5 items-start justify-items-center">
-            {isLoading && (
-                <div className="text-8xl">
-                <span className="loading loading-spinner loading-xl"></span>
-                </div>)
-            }
+        <div className={`basis-4/5 overflow-y-auto grid grid-cols-1 items-center bg-base-200 xs:grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-x-12 gap-y-8
+        p-5 ${!news ? "items-center" : "items-start"} justify-items-center`}>
             {
-                !news ? <h3 className="text-3xl text-center">Search to get started.</h3> :
-                news.length === 0 ? <h3 className="text-xl text-center">No search results found.</h3> :
-                (
-                    news.length > 0 && 
-                    news.map((article) => {
-                        return (
-                            <NewsItem article={article} updateMyFavourites={updateMyFavourites} myFavourites={myFavourites}/>
-                        )
-                    })
+                // while awaiting results
+                isLoading && (
+                <div className="col-span-8 text-8xl">
+                    <span className="loading loading-spinner loading-xl"></span>
+                </div>
                 )
             }
-            {/* <div className="card bg-base-100 w-full shadow-sm flex flex-col">
-                <div className="flex flex-row w-full py-2 px-3 items-center">
-                    <div className="avatar avatar-placeholder">
-                        <div className="bg-neutral text-neutral-content w-10 rounded-full">
-                            <span className="text-xl">D</span>
+            {   
+                // on initial render
+                !news && !isLoading && (
+                    <h3 className="text-3xl text-center col-span-4">Search to get started...</h3>
+                )
+            }
+            {
+                
+                news && !isLoading && (
+                    <>
+                        {
+                            news.map((article) => {
+                            return (
+                                <NewsItem article={article} updateMyFavourites={updateMyFavourites} myFavourites={myFavourites}/>
+                            )
+                            })
+                        }
+                        <div className="col-span-4 flex justify-center">
+                            <button className="btn btn-neutral text-center" onClick={handleNextPage}>Load More</button>
                         </div>
-                    </div>
-                    <div className="flex flex-col ml-5">
-                        <div className="text-xs">Publisher</div>
-                        <div className="text-xs">Date</div>
-                    </div>
-                </div>
-                <figure>
-                    <img
-                    src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-                    alt="Shoes" />
-                </figure>
-                <div className="card-body">
-                    <p>A card component has a figure, a body part, and inside body there are title and actions parts</p>
-                    <div className="card-actions justify-start">
-                    <button className="relative -left-3 -bottom-3 btn btn-circle btn-link btn-secondary hover:bg-base-200">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" className="size-[1.2em]"><path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" /></svg>
-                    </button>
-                    </div>
-                </div>
-            </div>
-            <div className="card bg-base-100 w-full shadow-sm flex flex-col">
-                <div className="flex flex-row w-full py-2 px-3 items-center">
-                    <div className="avatar avatar-placeholder">
-                        <div className="bg-neutral text-neutral-content w-10 rounded-full">
-                            <span className="text-xl">D</span>
-                        </div>
-                    </div>
-                    <div className="flex flex-col ml-5">
-                        <div className="text-xs">Publisher</div>
-                        <div className="text-xs">Date</div>
-                    </div>
-                </div>
-                <figure>
-                    <img
-                    src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-                    alt="Shoes" />
-                </figure>
-                <div className="card-body">
-                    <p>A card component has a figure, a body part, and inside body there are title and actions parts</p>
-                    <div className="card-actions justify-start">
-                    <button className="relative -left-3 -bottom-3 btn btn-circle btn-link btn-secondary hover:bg-base-200">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" className="size-[1.2em]"><path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" /></svg>
-                    </button>
-                    </div>
-                </div>
-            </div>
-            <div className="card bg-base-100 w-full shadow-sm flex flex-col">
-                <div className="flex flex-row w-full py-2 px-3 items-center">
-                    <div className="avatar avatar-placeholder">
-                        <div className="bg-neutral text-neutral-content w-10 rounded-full">
-                            <span className="text-xl">D</span>
-                        </div>
-                    </div>
-                    <div className="flex flex-col ml-5">
-                        <div className="text-xs">Publisher</div>
-                        <div className="text-xs">Date</div>
-                    </div>
-                </div>
-                <figure>
-                    <img
-                    src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-                    alt="Shoes" />
-                </figure>
-                <div className="card-body">
-                    <p>A card component has a figure, a body part, and inside body there are title and actions parts</p>
-                    <div className="card-actions justify-start">
-                    <button className="relative -left-3 -bottom-3 btn btn-circle btn-link btn-secondary hover:bg-base-200">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" className="size-[1.2em]"><path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" /></svg>
-                    </button>
-                    </div>
-                </div>
-            </div>
-            <div className="card bg-base-100 w-full shadow-sm flex flex-col">
-                <div className="flex flex-row w-full py-2 px-3 items-center">
-                    <div className="avatar avatar-placeholder">
-                        <div className="bg-neutral text-neutral-content w-10 rounded-full">
-                            <span className="text-xl">D</span>
-                        </div>
-                    </div>
-                    <div className="flex flex-col ml-5">
-                        <div className="text-xs">Publisher</div>
-                        <div className="text-xs">Date</div>
-                    </div>
-                </div>
-                <figure>
-                    <img
-                    src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-                    alt="Shoes" />
-                </figure>
-                <div className="card-body">
-                    <p>A card component has a figure, a body part, and inside body there are title and actions parts</p>
-                    <div className="card-actions justify-start">
-                    <button className="relative -left-3 -bottom-3 btn btn-circle btn-link btn-secondary hover:bg-base-200">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" className="size-[1.2em]"><path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" /></svg>
-                    </button>
-                    </div>
-                </div>
-            </div> */}
-            
+                        
+                    </>
 
+                )
+            }
         </div>
     );
 }
