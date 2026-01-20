@@ -1,6 +1,6 @@
 export default function FavouritesPanel({myFavourites, clearMyFavourites}){
     return (
-        <div className="flex flex-col basis-1/5 h-full">
+        <div className="hidden md:block flex flex-col basis-1/5 h-full">
             <div className="flex bg-primary/50 h-15 px-5 py-2 xs:flex-col md:flex-row w-full items-center">
                 <div className="basis-4/5">
                     <h2 className="text-primary-content">My Favourites</h2>

@@ -17,9 +17,14 @@ export default function ResultsPanel({keyword, page, updateMyFavourites, handleN
         if (keyword.length > 0 ){
 
             try {
-                let URL = `https://gnews.io/api/v4/search?q=${keyword}&lang=en&max=8&page=${page}&apikey=${GNewsApiKey}`;
+                let URL = `https://corsproxy.io/?url=https://gnews.io/api/v4/search?q=${keyword}&lang=en&max=8&page=${page}`;
 
-                const response = await fetch(URL);
+                const response = await fetch(URL, {
+                    headers: {
+                        "X-Api-Key": GNewsApiKey
+                    }
+                });
+                
                 const data = await response.json();
                 const articles = data.articles;
 
@@ -35,7 +40,7 @@ export default function ResultsPanel({keyword, page, updateMyFavourites, handleN
                     }
                     
                 } else {
-                    setError({errorType: "info", errorMessage: "No articles to retrieve."});
+                    setError({errorType: "error", errorMessage: "No articles to retrieve."});
                 }
 
             } catch (err) {
@@ -60,12 +65,12 @@ export default function ResultsPanel({keyword, page, updateMyFavourites, handleN
     , [page, keyword]);    
 
     return(
-        <div className={`basis-4/5 overflow-y-auto grid grid-cols-1 items-center bg-base-200 xs:grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-x-12 gap-y-8
+        <div className={`flex-1 overflow-y-auto grid grid-cols-1 items-center bg-base-200 md:grid-cols-2 xl:grid-cols-4 gap-x-12 gap-y-8
         p-5 ${!news ? "items-center" : "items-start"} justify-items-center`}>
             {
                 // while awaiting results
                 isLoading && (
-                <div className="col-span-8 text-8xl">
+                <div className="lg:col-span-8 text-8xl">
                     <span className="loading loading-spinner loading-xl"></span>
                 </div>
                 )
@@ -87,8 +92,8 @@ export default function ResultsPanel({keyword, page, updateMyFavourites, handleN
                             )
                             })
                         }
-                        <div className="col-span-4 flex justify-center">
-                            <button className="btn btn-neutral text-center" onClick={handleNextPage}>Load More</button>
+                        <div className="col-span-1 lg:col-span-4 flex justify-center">
+                            <button className="btn btn-secondary text-secondary-content text-center" onClick={handleNextPage}>Load More</button>
                         </div>
                         
                     </>
