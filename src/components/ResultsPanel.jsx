@@ -88,11 +88,11 @@ export default function ResultsPanel({keyword, page, updateMyFavourites, handleN
                         {
                             news.map((article) => {
                             return (
-                                <NewsItem article={article} updateMyFavourites={updateMyFavourites} myFavourites={myFavourites}/>
+                                <NewsItem article={article} updateMyFavourites={updateMyFavourites} myFavourites={myFavourites} setError={setError}/>
                             )
                             })
                         }
-                        <div className="col-span-1 lg:col-span-4 flex justify-center">
+                        <div className="col-span-1 md:col-span-2 xl:col-span-4 flex justify-center">
                             <button className="btn btn-secondary text-secondary-content text-center" onClick={handleNextPage}>Load More</button>
                         </div>
                         

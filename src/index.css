@@ -2,3 +2,8 @@
 @plugin "daisyui"{
     themes: bumblebee --default;
 };
+
+.alert-info {
+    background-color: oklch(82% 0.111 230.318);
+    border-color: oklch(82% 0.111 230.318);
+}

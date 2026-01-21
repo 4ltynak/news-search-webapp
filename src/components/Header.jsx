@@ -1,6 +1,6 @@
 import {useState} from "react";
 
-export default function Header({keyword, handleSetKeyword, setError}){
+export default function Header({keyword, handleSetKeyword, setError, toggleMobileMenu}){
     const [searchTerm, setSearchTerm] = useState(keyword ?? "");
     const [isEmpty, setIsEmpty] = useState(true);
     
@@ -20,13 +20,13 @@ export default function Header({keyword, handleSetKeyword, setError}){
         } else {
             handleSetKeyword(searchTerm);
         }
-        
     }
+
 
     return(
         <div className="navbar bg-primary sticky top-0 z-10 bg-base-100 shadow-sm px-5 flex items-center w-full">
             <div className="flex gap-2 items-center w-full lg:w-fit">
-                <label htmlFor="page-drawer" className="btn md:hidden border-none shadow-none bg-transparent p-2">
+                <label htmlFor="page-drawer" className="btn md:hidden border-none shadow-none bg-transparent p-2" onClick={toggleMobileMenu}>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block h-5 w-5 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path> </svg>
                 </label>
                 <h1 className="text-primary-content text-xl font-bold">News Search</h1>

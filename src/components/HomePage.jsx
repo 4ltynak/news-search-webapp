@@ -13,6 +13,12 @@ export default function HomePage() {
     const [error, setError] = useState({errorType: "", error: ""});
     const [isAlertOpen, setIsAlertOpen] = useState(false);
 
+    const [isMobileOpen, setIsMobileOpen] = useState(false);
+
+    const toggleMobileMenu = () => {
+        setIsMobileOpen(s => !s);
+    }
+
     const clearMyFavourites = () => {
         setMyFavourites([]);
     }
@@ -52,12 +58,12 @@ export default function HomePage() {
     }, [myFavourites]);
 
     return (
-        <div className="h-screen">
+        <div className="h-screen relative">
             <div className="flex flex-col h-full">
-                <Header keyword={keyword} handleSetKeyword={handleSetKeyword} setError={setError}/>
+                <Header keyword={keyword} handleSetKeyword={handleSetKeyword} setError={setError} toggleMobileMenu={toggleMobileMenu}/>
             <div className="flex-1 overflow-y-hidden">
                 <div className="flex flex-row h-full">
-                <FavouritesPanel myFavourites={myFavourites} clearMyFavourites={clearMyFavourites} handleSetKeyword={handleSetKeyword}/>
+                <FavouritesPanel myFavourites={myFavourites} clearMyFavourites={clearMyFavourites} handleSetKeyword={handleSetKeyword} isMobileOpen={isMobileOpen} toggleMobileMenu={toggleMobileMenu}/>
                 <ResultsPanel keyword={keyword} page={page}
                 updateMyFavourites={updateMyFavourites} handleNextPage={handleNextPage} myFavourites={myFavourites} setError={setError}/>
                 </div>

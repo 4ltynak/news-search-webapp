@@ -1,10 +1,15 @@
 import { useState, useEffect } from "react";
 
-export default function NewsItem({article, updateMyFavourites, myFavourites}){
+export default function NewsItem({article, updateMyFavourites, myFavourites, setError}){
     const [isHovered, setIsHovered] = useState(false);
 
     const addToFavourites = () => {
-        updateMyFavourites(article.url, article);
+        if (!isDuplicate) {
+            updateMyFavourites(article.url, article);
+        } else {
+            setError({errorType: "info", error: "Item is already in favourites list!"});
+        }
+        
     }
 
     function handleImageError(e){
