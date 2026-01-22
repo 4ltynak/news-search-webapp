@@ -2,8 +2,6 @@
 
 A news search application that allows users to search for the latest news articles. The app fetches articles from various sources based on keywords, and provides an option to mark articles as favorites.
 
-Please note, the latest version only works with desktop layouts. Mobile layout will be implemented in the future.
-
 ## Features
 
 **Search News:** Users can search for news articles based on keywords.
